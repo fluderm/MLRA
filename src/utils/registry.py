@@ -60,6 +60,7 @@ layer = {
     "rnn": "src.models.sequence.rnns.rnn.RNN",
     "mha": "src.models.sequence.mha.MultiheadAttention",
     "pmamba": "src.models.sequence.mamba_pytorch.PytorchMambaBlock",
+    "mamba": "src.models.sequence.mamba.CudaMambaBlock",
     "mhfa": "src.models.sequence.mha.MultiheadAttentionFlash",
     "mhfla": "src.models.sequence.mha.MultiheadLocalAttention",
     "conv1d": "src.models.sequence.convs.conv1d.Conv1d",
