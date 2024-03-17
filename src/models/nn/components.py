@@ -327,7 +327,7 @@ class Normalization(nn.Module):
 
     def forward(self, x):
         # Handle higher dimension logic
-        if _name_ == 'rms':
+        if self._name_ == 'rms':
             x = x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps) * self.weight
             return x
         else:
