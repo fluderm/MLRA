@@ -1,6 +1,7 @@
 optimizer = {
     "adam": "torch.optim.Adam",
     "adamw": "torch.optim.AdamW",
+    "adamwmamba": "torch.optim.AdamWmamba",
     "rmsprop": "torch.optim.RMSprop",
     "sgd": "torch.optim.SGD",
     "lamb": "src.utils.optim.lamb.JITLamb",
@@ -58,6 +59,7 @@ layer = {
     "ff": "src.models.sequence.ff.FF",
     "rnn": "src.models.sequence.rnns.rnn.RNN",
     "mha": "src.models.sequence.mha.MultiheadAttention",
+    "pmamba": "src.models.sequence.mamba_pytorch.PytorchMambaBlock",
     "mhfa": "src.models.sequence.mha.MultiheadAttentionFlash",
     "mhfla": "src.models.sequence.mha.MultiheadLocalAttention",
     "conv1d": "src.models.sequence.convs.conv1d.Conv1d",

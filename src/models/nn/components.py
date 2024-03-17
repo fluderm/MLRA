@@ -259,6 +259,25 @@ class TransposedLN(nn.Module):
             y = rearrange(_x, 'b ... d -> b d ...')
         return y
 
+
+
+# class RMSNorm(nn.Module):
+#     def __init__(self,
+#                  d_model: int,
+#                  eps: float = 1e-5):
+#         super().__init__()
+#         self.eps = eps
+#         self.weight = nn.Parameter(torch.ones(d_model))
+
+#     def forward(self, x):
+#         output = x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps) * self.weight
+
+#         return output
+
+
+
+
+
 class Normalization(nn.Module):
     def __init__(
         self,
@@ -277,6 +296,11 @@ class Normalization(nn.Module):
                 self.norm = TransposedLN(d, **kwargs)
             else:
                 self.norm = nn.LayerNorm(d, **kwargs)
+        # added:
+        elif _name_ == 'rms':
+            self.eps = 1e-5
+            self.weight = nn.Parameter(torch.ones(d_model))
+        # 
         elif _name_ == 'instance':
             self.channel = False
             norm_args = {'affine': False, 'track_running_stats': False}
@@ -302,23 +326,27 @@ class Normalization(nn.Module):
 
     def forward(self, x):
         # Handle higher dimension logic
-        shape = x.shape
-        if self.transposed:
-            x = rearrange(x, 'b d ... -> b d (...)')
+        if _name_ == 'rms':
+            x = x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps) * self.weight
+            return x
         else:
-            x = rearrange(x, 'b ... d -> b (...)d ')
+            shape = x.shape
+            if self.transposed:
+                x = rearrange(x, 'b d ... -> b d (...)')
+            else:
+                x = rearrange(x, 'b ... d -> b (...)d ')
 
-        # The cases of LayerNorm / no normalization are automatically handled in all cases
-        # Instance/Batch Norm work automatically with transposed axes
-        if self.channel or self.transposed:
-            x = self.norm(x)
-        else:
-            x = x.transpose(-1, -2)
-            x = self.norm(x)
-            x = x.transpose(-1, -2)
+            # The cases of LayerNorm / no normalization are automatically handled in all cases
+            # Instance/Batch Norm work automatically with transposed axes
+            if self.channel or self.transposed:
+                x = self.norm(x)
+            else:
+                x = x.transpose(-1, -2)
+                x = self.norm(x)
+                x = x.transpose(-1, -2)
 
-        x = x.view(shape)
-        return x
+            x = x.view(shape)
+            return x
 
     def step(self, x, **kwargs):
         assert self._name_ in ["layer", "none"]
