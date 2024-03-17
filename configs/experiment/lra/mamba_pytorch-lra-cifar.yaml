@@ -2,7 +2,7 @@
 defaults:
   - /pipeline: cifar
   - /model: mamba_pytorch
-  - /optimizer: adamwmamba
+  - override /optimizer: adamw
   - override /scheduler: cosine_warmup
 
 scheduler:
@@ -44,6 +44,9 @@ loader:
 optimizer:
   lr: 0.001
   weight_decay: 0.1
+  betas:
+    - 0.9
+    - 0.95 
 
 trainer:
   max_epochs: 100

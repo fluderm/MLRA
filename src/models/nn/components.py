@@ -299,7 +299,8 @@ class Normalization(nn.Module):
         # added:
         elif _name_ == 'rms':
             self.eps = 1e-5
-            self.weight = nn.Parameter(torch.ones(d_model))
+            self.d_model = d
+            self.weight = nn.Parameter(torch.ones(self.d_model))
         # 
         elif _name_ == 'instance':
             self.channel = False
