@@ -1,6 +1,5 @@
 - _name_: mamba
   causal: true
-  n_heads: 8
   dropout: null
   bias: True
   add_bias_kv: False

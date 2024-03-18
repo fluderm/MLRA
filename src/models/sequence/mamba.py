@@ -41,18 +41,31 @@ from mamba_ssm import Mamba
 @TransposedModule
 class CudaMambaBlock(SequenceModule):
     """Wrapper for MultiheadAttention using Mamba for efficient attention processing."""
-    def __init__(self, d_model, n_heads, dropout=0.0, *args, bias=True, causal=True, rotary=False, **kwargs):
+    def __init__(self, 
+                 d_model, 
+                 d_state = 16, 
+                 d_conv = 4, 
+                 expand = 2, 
+                 dropout=0.0, 
+                 *args, 
+                 bias=True, 
+                 causal=True, 
+                 rotary=False, 
+                 **kwargs):
+
         super().__init__()
         # Sequence model necessary attributes
         self.d_model = d_model
         self.d_output = d_model
 
-        assert d_model % n_heads == 0
-        # We assume d_v always equals d_k
-        self.d_k = d_model // n_heads
-        self.num_heads = n_heads
+        #self.d_k = d_model // n_heads
+        #self.num_heads = n_heads
+        
         self.causal = causal
         self.dropout = nn.Dropout(dropout)
+        self.d_state = d_state
+        self.d_conv = d_conv
+        self.expand = expand
 
         if rotary:
             self.rope = RotaryEmbedding(self.d_k)
@@ -60,9 +73,9 @@ class CudaMambaBlock(SequenceModule):
         # Initialize Mamba block
 
         self.mamba = Mamba(d_model = d_model,
-                           d_state = 16,
-                           d_conv = 4,
-                           expand = 2,
+                           d_state = self.d_state,
+                           d_conv = self.d_conv,
+                           expand = self.expand,
                            dt_rank = 'auto',
                            dt_min = 0.001,
                            dt_max = 0.1,
