@@ -43,10 +43,10 @@ class CudaMambaBlock(SequenceModule):
     """Wrapper for MultiheadAttention using Mamba for efficient attention processing."""
     def __init__(self, 
                  d_model, 
-                 d_state = 16, 
-                 d_conv = 4, 
-                 expand = 2, 
                  dropout=0.0, 
+                 ss_state=16, 
+                 d_conv=4, 
+                 expand=2, 
                  *args, 
                  bias=True, 
                  causal=True, 
@@ -63,7 +63,7 @@ class CudaMambaBlock(SequenceModule):
         
         self.causal = causal
         self.dropout = nn.Dropout(dropout)
-        self.d_state = d_state
+        self.ss_state = ss_state
         self.d_conv = d_conv
         self.expand = expand
 
@@ -73,7 +73,7 @@ class CudaMambaBlock(SequenceModule):
         # Initialize Mamba block
 
         self.mamba = Mamba(d_model = d_model,
-                           d_state = self.d_state,
+                           d_state = self.ss_state,
                            d_conv = self.d_conv,
                            expand = self.expand,
                            dt_rank = 'auto',
