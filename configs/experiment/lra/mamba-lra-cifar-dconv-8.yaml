@@ -18,8 +18,8 @@ model:
   layer:
     - _name_: mamba
       causal: false
-      d_state: 128
-      d_conv: 4
+      ss_state: 16
+      d_conv: 8
       expand: 2
       dropout: null
       bias: True
