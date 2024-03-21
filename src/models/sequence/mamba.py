@@ -71,7 +71,8 @@ class CudaMambaBlock(SequenceModule):
             self.rope = RotaryEmbedding(self.d_k)
 
         # Initialize Mamba block
-
+        print(f'-------------------------------')
+        print(f'Mamba d_state = {self.ss_state}')
         self.mamba = Mamba(d_model = d_model,
                            d_state = self.ss_state,
                            d_conv = self.d_conv,
