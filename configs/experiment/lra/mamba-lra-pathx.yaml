@@ -18,7 +18,7 @@ model:
   layer:
     - _name_: mamba
       causal: false
-      d_state: 64
+      ss_state: 64
       d_conv: 4
       expand: 2
       dropout: null
