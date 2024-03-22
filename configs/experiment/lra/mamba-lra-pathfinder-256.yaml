@@ -1,6 +1,6 @@
 # @package _global_
 defaults:
-  - /pipeline: pathfinder
+  - /pipeline: pathfinder-256
   - /model: mamba
   - override /optimizer: adamw
   - override /scheduler: cosine_warmup
@@ -41,8 +41,8 @@ loader:
   batch_size: 32
 
 optimizer:
-  lr: 0.0005
-  weight_decay: 0.05
+  lr: 0.001
+  weight_decay: 0.1
   betas:
     - 0.9
     - 0.95 
