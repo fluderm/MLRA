@@ -115,7 +115,7 @@ class CudaMambaBlock(SequenceModule):
         self.expand = expand
 
         if rotary:
-            self.rope = RotaryEmbedding(self.d_k)
+            self.rope = RotaryEmbedding(self.d_model)
 
         # Initialize Mamba block
         print(f'-------------------------------')
