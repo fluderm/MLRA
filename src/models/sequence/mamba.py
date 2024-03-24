@@ -38,6 +38,53 @@ except ImportError:
 from mamba_ssm import Mamba
 
 
+class RotaryEmbedding(nn.Module):
+    """rope = RotaryEmbedding(64)
+    q = torch.randn(1, 8, 1024, 64) # queries - (batch, heads, seq len, dimension of head)
+    k = torch.randn(1, 8, 1024, 64) # keys
+
+    # apply embeds to queries, keys after the heads have been split out but prior to dot products
+
+    q = rope(q)
+    k = rope(k)
+
+    # then do attention with queries (q) and keys (k) as usual
+
+    q_k = [q_k_0,...,q_k_d-1] is mapped to [...,cos(theta**(2mk/d))q_k_2m - sin(theta**(2mk/d))q_k_2m+1, cos(theta**(2mk/d))q_k_2m+1 + sin(theta**(2mk/d))q_k_2m,...]
+    """
+
+    def __init__(self, d, theta=10000):
+        super().__init__()
+        assert d % 2 == 0
+        freqs = theta ** (-torch.arange(0, d, 2) / d)  # (d / 2)
+        self.register_buffer('freqs', freqs)
+        self.cache = dict()
+
+    def get_freqs(self, pos, cache_key=None):
+        if cache_key and cache_key in self.cache:
+            return self.cache[cache_key]
+
+        freqs = self.freqs  # (d/2)
+        freqs = pos.to(freqs).view(-1, 1) * freqs  # (L d/2)
+
+        cos, sin = freqs.cos(), freqs.sin()
+        freqs = torch.stack((cos, -sin, sin, cos), dim=-1)  # (L d/2 4)
+        freqs = rearrange(freqs, '... (r c) -> ... r c', c=2)  # (L d/2 2 2)
+
+        if cache_key:
+            self.cache[cache_key] = freqs
+
+        return freqs  # (L d/2 2 2)
+
+    def forward(self, x, seq_dim=-2):
+        # x: (... L d)
+        L = x.shape[seq_dim]
+        freqs = self.get_freqs(torch.arange(L, device=x.device), L)  # (L d/2 2 2)
+        x = rearrange(x, '... (d r) -> ... d r', r=2)  # (... L d/2 2)
+        x = einsum('... r c, ... c -> ... r', freqs, x)  # (L d/2 2 2), (... L d/2 2)
+        return rearrange(x, '... d r -> ... (d r)')
+
+
 @TransposedModule
 class CudaMambaBlock(SequenceModule):
     """Wrapper for MultiheadAttention using Mamba for efficient attention processing."""

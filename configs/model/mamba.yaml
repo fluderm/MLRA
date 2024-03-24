@@ -4,5 +4,5 @@ defaults:
   - override layer: mamba
 
 encoder:
-  _name_: position
+  _name_: id
   dropout: ${..dropout}
