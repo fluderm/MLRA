@@ -22,6 +22,7 @@ from src.utils import registry
 from src.utils.optim.ema import build_ema_optimizer
 from src.utils.optim_groups import add_optimizer_hooks
 
+
 from src.models.functional.misc import apply_rand_init
 from src.models.lm.model import LM_MODEL_LIST
 
@@ -32,6 +33,9 @@ import torch.backends
 
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
+
+# learning rate monitor:
+from pytorch_lightning.callbacks import LearningRateMonitor
 
 
 # Lots of annoying hacks to get WandbLogger to continuously retry on failure
@@ -791,6 +795,10 @@ def create_trainer(config, **kwargs):
             callback._name_ = _name_
             callbacks.append(utils.instantiate(registry.callbacks, callback))
 
+    # add learning rate monitor:
+    lr_monitor = LearningRateMonitor(logging_interval='step')  # or 'epoch'
+    callbacks.append(lr_monitor)
+
     # Configure ddp automatically
     if config.trainer.gpus > 1:
         print("ddp automatically configured, more than 1 gpu used!")
@@ -812,7 +820,7 @@ def create_trainer(config, **kwargs):
             print(f"\tStage {i}: {e['resolution']} @ {e['epochs']} epochs")
 
     kwargs.update(config.trainer)
-    trainer = pl.Trainer(logger=logger, **kwargs)
+    trainer = pl.Trainer(logger=logger, callbacks=callbacks, **kwargs)
     return trainer
 
 
