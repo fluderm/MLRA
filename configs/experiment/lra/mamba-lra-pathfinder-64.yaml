@@ -3,7 +3,7 @@ defaults:
   - /pipeline: pathfinder-64
   - /model: mamba
   - override /optimizer: adamw
-  - override /scheduler: cosine_warmup
+  - override /scheduler: constant_warmup
 
 scheduler:
   # num_training_steps: 40000
