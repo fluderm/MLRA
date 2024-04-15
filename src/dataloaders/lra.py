@@ -533,7 +533,7 @@ class AAN(SequenceDataset):
             # 'max_vocab': 100, # Full size 98
             "append_bos": False,
             "append_eos": True,
-            "n_workers": 4,  # For tokenizing only
+            "n_workers": 1,  # For tokenizing only
         }
 
     @property
