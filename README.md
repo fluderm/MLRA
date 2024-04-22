@@ -9,3 +9,7 @@ Suggest reading the following before/while reading the code:
         https://arxiv.org/abs/2312.00752
     [2] The Annotated S4 (Sasha Rush and Sidd Karamcheti)
         https://srush.github.io/annotated-s4
+
+# Presentation link:
+
+https://docs.google.com/presentation/d/18zRc7p6e3-ndhbCJzaSiNVxmKR-QH3yYVQPl9Ey3cpw/edit?usp=sharing
