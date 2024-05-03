@@ -3,7 +3,7 @@ defaults:
   - /pipeline: cifar
   - /model: mamba
   - override /optimizer: adamw
-  - override /scheduler: cosine_warmup
+  - override /scheduler: constant_warmup
 
 scheduler:
 #  num_training_steps: 250000 # 50 epochs
@@ -38,10 +38,10 @@ model:
       kdim: null
       vdim: null
       rotary: true
-    - _name_: ff
-      expand: 2
-      activation: gelu
-      dropout: ${...dropout} # Same as null
+    # - _name_: ff
+    #   expand: 2
+    #   activation: gelu
+    #   dropout: ${...dropout} # Same as null
 
 decoder:
   _name_: sequence_nonelinear

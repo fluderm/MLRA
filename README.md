@@ -1,15 +1,10 @@
 # Mamba Long Range Arena
 
-This repository contains some experiments for Mamba and its performance on the long range arena tasks.
+This repository contains experiments for Mamba and its performance on the [long range arena (LRA)](https://arxiv.org/abs/2011.04006) tasks, as well as a few other experiments related to Mamba. 
 
-A lot of the code here is taken from the repository [not-from-scratch](https://github.com/IdoAmos/not-from-scratch/) as well as [Mamba](https://github.com/state-spaces/mamba/tree/main) and [Long-Range-Arena](https://github.com/google-research/long-range-arena).
+A lot of the LRA code is taken from the repository [not-from-scratch](https://github.com/IdoAmos/not-from-scratch/) and [Long-Range-Arena](https://github.com/google-research/long-range-arena). We furthermore use the [Mamba](https://github.com/state-spaces/mamba/tree/main) block from the [Mamba paper](https://arxiv.org/abs/2312.00752).
 
-Suggest reading the following before/while reading the code:
-    [1] Mamba: Linear-Time Sequence Modeling with Selective State Spaces (Albert Gu and Tri Dao)
-        https://arxiv.org/abs/2312.00752
-    [2] The Annotated S4 (Sasha Rush and Sidd Karamcheti)
-        https://srush.github.io/annotated-s4
+A summary of our results can be found in 
 
-# Presentation link:
 
-https://docs.google.com/presentation/d/18zRc7p6e3-ndhbCJzaSiNVxmKR-QH3yYVQPl9Ey3cpw/edit?usp=sharing
+
